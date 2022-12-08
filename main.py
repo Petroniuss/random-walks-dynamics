@@ -1,3 +1,4 @@
+from random_walks import dry_run_animation
 from random_walks import dry_run
 
 # 1. Extract graph definition from core algorithm.
@@ -10,4 +11,4 @@ from random_walks import dry_run
 
 if __name__ == '__main__':
     print('Gonna be fun!')
-    dry_run()
+    dry_run_animation()

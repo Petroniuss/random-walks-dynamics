@@ -1,5 +1,6 @@
 ### Idea
 .idea
+*.mp4
 
 ### Python template
 # Byte-compiled / optimized / DLL files
