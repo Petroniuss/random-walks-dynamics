@@ -14,7 +14,6 @@ from typing import List
 HEAT_ATTRIBUTE = 'heat'
 MATPLOTLIB_BACKEND = 'TkAgg'
 SELECTED_NODE_COLOR = (0.0, 1.0, 0.0, 1.0)
-PREV_SELECTED_NODE_COLOR = (0.0, 0.0, 1.0, 1.0)
 CMAP = 'hot'
 
 matplotlib.use(MATPLOTLIB_BACKEND)
@@ -112,7 +111,6 @@ def animate_random_walk(graph: nx.Graph,
     edge_colors = normalize_colors(nx.get_edge_attributes(graph, HEAT_ATTRIBUTE).values())
     node_colors = normalize_colors(nx.get_node_attributes(graph, HEAT_ATTRIBUTE).values())
 
-    # move this to the algorithm.
     drawn_nodes.set_color(node_colors)
     drawn_edges.set_color(edge_colors)
     drawn_edges.set_linewidth(list(edge_weights))
@@ -175,7 +173,7 @@ def random_walk_iteration(graph: nx.Graph,
 
     # update heat
     graph.nodes[i][HEAT_ATTRIBUTE] += 1
-    if j in graph[i]:
+    if i in graph[j]:
         graph[j][i][HEAT_ATTRIBUTE] += 1
     else:
         # todo: is this a bug? I guess no..
