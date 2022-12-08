@@ -1,1 +1,2 @@
-print('Gonna be fun')
+if __name__ == '__main__':
+    print('Gonna be fun!')
