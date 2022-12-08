@@ -57,7 +57,7 @@ def random_walk(graph: nx.Graph,
         node_heatmap[i] += 1
 
         if verbose:
-            print(f"{t}. {j} -> {i}")
+            print(f'{t}. {j} -> {i}')
 
         div = 0
         for l in range(N):
