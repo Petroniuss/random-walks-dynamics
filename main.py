@@ -1,5 +1,4 @@
 from random_walks import dry_run_animation
-from random_walks import dry_run
 
 # 1. Extract graph definition from core algorithm.
 # 2. Create animation:
