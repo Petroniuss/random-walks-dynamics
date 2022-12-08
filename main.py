@@ -1,0 +1,1 @@
+print('Gonna be fun')
