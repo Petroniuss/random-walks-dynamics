@@ -39,7 +39,7 @@ def dry_run_snap_graph():
     print(f'Bitcoin graph: {nx.info(graph)}')
     graph = nx.relabel_nodes(graph, lambda e: e - 1)
 
-    n = 500
+    n = 250
     graph = nx.subgraph(graph, range(n))
     print(f'Bitcoin subgraph: {nx.info(graph)}')
 
