@@ -6,6 +6,7 @@ import networkx as nx
 import numpy as np
 
 from matplotlib import animation
+from matplotlib import rcParams
 from matplotlib.animation import FuncAnimation
 from matplotlib.collections import PathCollection, LineCollection
 from tqdm import tqdm
@@ -16,6 +17,8 @@ MATPLOTLIB_BACKEND = 'TkAgg'
 SELECTED_NODE_COLOR = (0.0, 1.0, 0.0, 1.0)
 CMAP = 'hot'
 
+rcParams["figure.figsize"] = (16.4, 12.8)
+
 matplotlib.use(MATPLOTLIB_BACKEND)
 plt.set_cmap(CMAP)
 
@@ -25,7 +28,24 @@ def dry_run_animation():
     Assume undirected graph for now.
     """
     graph = nx.karate_club_graph()
-    animate_random_walk(graph)
+    animate_random_walk(graph, animation_name='karate.mp4', n_iters=1000)
+
+
+def dry_run_snap_graph():
+    graph = nx.read_edgelist('./graphs/soc-sign-bitcoinalpha.csv',
+                             delimiter=',',
+                             nodetype=int,
+                             data=[('rating', int), ('time', int)])
+    print(f'Bitcoin graph: {nx.info(graph)}')
+    graph = nx.relabel_nodes(graph, lambda e: e - 1)
+
+    n = 500
+    graph = nx.subgraph(graph, range(n))
+    print(f'Bitcoin subgraph: {nx.info(graph)}')
+
+    animation_name = f'bitcoin_nodes_{n}.mp4'
+    animate_random_walk(graph, animation_name=animation_name, n_iters=1000, fps=20, node_size=50, edge_alpha=0.2)
+    print(f'Generated {animation_name}')
 
 
 @dataclass
@@ -84,6 +104,9 @@ def normalize_colors(colors):
 def animate_random_walk(graph: nx.Graph,
                         alpha: int = 0.5,
                         n_iters: int = 100,
+                        animation_name: str = 'animation.mp4',
+                        node_size: int = 300,
+                        edge_alpha: float = 0.5,
                         fps: int = 10,
                         verbose: bool = False):
     # algorithm initial state
@@ -134,9 +157,9 @@ def animate_random_walk(graph: nx.Graph,
         fig, animation_update, frames=n_iters, fargs=(args,), interval=40, save_count=n_iters
     )
 
-    anim.save('animation2.mp4', writer=animation.FFMpegWriter(fps=fps))
     # for interactive plotting.
     # plt.show()
+    anim.save(f'./animations/{animation_name}', writer=animation.FFMpegWriter(fps=fps))
 
 
 def random_walk_iteration(graph: nx.Graph,
@@ -157,6 +180,12 @@ def random_walk_iteration(graph: nx.Graph,
     N = len(A)
 
     p = PI @ PI[:, j]
+
+    # todo: debug when this case occurs
+    # my bet is that this happens when some node does not have any edges or something similar.
+    if np.isnan(p).any():
+        print(p.sum())
+        print(p)
 
     while j == (i := np.random.choice(range(N), p=p)):
         continue
