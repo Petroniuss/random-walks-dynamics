@@ -1,4 +1,5 @@
 from random_walks import dry_run_snap_graph
+from statistics import show_time_to_convergence, graph_bitcoin, graph_karate_club
 
 # 1. Extract graph definition from core algorithm.
 # 2. Create animation:
@@ -9,5 +10,6 @@ from random_walks import dry_run_snap_graph
 
 
 if __name__ == '__main__':
-    print('Gonna be fun!')
-    dry_run_snap_graph()
+    show_time_to_convergence(graph_karate_club())
+    # show_time_to_convergence(graph_bitcoin(n=100))
+    # dry_run_snap_graph()

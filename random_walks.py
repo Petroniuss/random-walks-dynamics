@@ -19,7 +19,7 @@ CMAP = 'hot'
 
 rcParams["figure.figsize"] = (16.4, 12.8)
 
-matplotlib.use(MATPLOTLIB_BACKEND)
+# matplotlib.use(MATPLOTLIB_BACKEND)
 plt.set_cmap(CMAP)
 
 
