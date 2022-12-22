@@ -12,7 +12,8 @@ from matplotlib.collections import PathCollection, LineCollection
 from tqdm import tqdm
 from typing import List
 
-from graphs import HEAT_ATTRIBUTE
+from graphs import HEAT_ATTRIBUTE, graph_karate_club
+from graphs import graph_bitcoin
 
 MATPLOTLIB_BACKEND = 'TkAgg'
 SELECTED_NODE_COLOR = (0.0, 1.0, 0.0, 1.0)
@@ -27,22 +28,13 @@ def dry_run_animation():
     """
     Assume undirected graph for now.
     """
-    graph = nx.karate_club_graph()
+    graph = graph_karate_club()
     animate_random_walk(graph, animation_name='karate.mp4', n_iters=1000)
 
 
-def dry_run_snap_graph():
-    graph = nx.read_edgelist('./graphs/soc-sign-bitcoinalpha.csv',
-                             delimiter=',',
-                             nodetype=int,
-                             data=[('rating', int), ('time', int)])
-    print(f'Bitcoin graph: {nx.info(graph)}')
-    graph = nx.relabel_nodes(graph, lambda e: e - 1)
-
-    n = 250
-    graph = nx.subgraph(graph, range(n))
+def dry_run_snap_graph(n: int = 250):
+    graph = graph_bitcoin(n)
     print(f'Bitcoin subgraph: {nx.info(graph)}')
-
     animation_name = f'bitcoin_nodes_{n}.mp4'
     animate_random_walk(graph, animation_name=animation_name, n_iters=1000, fps=20, node_size=50, edge_alpha=0.2)
     print(f'Generated {animation_name}')
