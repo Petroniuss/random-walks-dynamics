@@ -3,6 +3,25 @@ import numpy as np
 from graphs import HEAT_ATTRIBUTE
 
 
+def get_p(PI: np.ndarray,
+          j: int):
+    return PI @ PI[:, j]
+
+
+def update_PI(A: np.ndarray,
+              PI: np.ndarray,
+              j: int,
+              alpha: int,):
+    N = len(A)
+    p = get_p(PI, j)
+    div = 0
+    for l in range(N):
+        div += A[l, j] * np.exp(alpha * p[l])
+
+    for k in range(N):
+        PI[k, j] = (A[k, j] * np.exp(alpha * p[k])) / div
+
+
 def random_walk_iteration(graph: nx.Graph,
                           A: np.ndarray,
                           PI: np.ndarray,
@@ -20,7 +39,9 @@ def random_walk_iteration(graph: nx.Graph,
     """
     N = len(A)
 
-    p = PI @ PI[:, j]
+    update_PI(A, PI, j, alpha)
+
+    p = get_p(PI, j)
 
     if np.isnan(p).any():
         print(p.sum())
@@ -28,13 +49,6 @@ def random_walk_iteration(graph: nx.Graph,
 
     while j == (i := np.random.choice(range(N), p=p)):
         continue
-
-    div = 0
-    for l in range(N):
-        div += A[l, j] * np.exp(alpha * p[l])
-
-    for k in range(N):
-        PI[k, j] = (A[k, j] * np.exp(alpha * p[k])) / div
 
     if verbose:
         print(f'{j} -> {i}')
