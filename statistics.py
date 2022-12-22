@@ -1,4 +1,4 @@
-from random_walks import random_walk_iteration, HEAT_ATTRIBUTE
+from random_walks import random_walk_iteration
 from tqdm import tqdm
 
 import numpy as np
@@ -14,32 +14,14 @@ font = {
 plt.rc('font', **font)
 
 
-def decorate_graph_with_attributes(graph: nx.Graph):
-    nx.set_edge_attributes(graph, 1, HEAT_ATTRIBUTE)
-    nx.set_node_attributes(graph, 1, HEAT_ATTRIBUTE)
-
-    return graph
-
-
-def graph_karate_club():
-    return decorate_graph_with_attributes(nx.karate_club_graph())
-
-
-def graph_bitcoin(n: int = 100):
-    graph = nx.read_edgelist('./graphs/soc-sign-bitcoinalpha.csv',
-                             delimiter=',',
-                             nodetype=int,
-                             data=[('rating', int), ('time', int)])
-    print(f'Bitcoin graph: {nx.info(graph)}')
-    graph = nx.relabel_nodes(graph, lambda e: e - 1)
-    return decorate_graph_with_attributes(nx.subgraph(graph, range(n)))
-
-
 def show_time_to_convergence(
         graph: nx.Graph,
-        graph_name: str = 'karate',
-        max_iters: int = 1000,
+        graph_name: str,
+        max_iters: int = 10000,
         alpha: int = 0.85):
+    if not nx.is_connected(graph):
+        raise Exception('Graph is disconnected')
+
     A = nx.adjacency_matrix(graph).toarray()
     N = len(A)
 

@@ -12,14 +12,14 @@ from matplotlib.collections import PathCollection, LineCollection
 from tqdm import tqdm
 from typing import List
 
-HEAT_ATTRIBUTE = 'heat'
+from graphs import HEAT_ATTRIBUTE
+
 MATPLOTLIB_BACKEND = 'TkAgg'
 SELECTED_NODE_COLOR = (0.0, 1.0, 0.0, 1.0)
 CMAP = 'hot'
 
 rcParams["figure.figsize"] = (16.4, 12.8)
 
-# matplotlib.use(MATPLOTLIB_BACKEND)
 plt.set_cmap(CMAP)
 
 
@@ -109,6 +109,8 @@ def animate_random_walk(graph: nx.Graph,
                         edge_alpha: float = 0.5,
                         fps: int = 10,
                         verbose: bool = False):
+    matplotlib.use(MATPLOTLIB_BACKEND)
+
     # algorithm initial state
     A = nx.adjacency_matrix(graph).toarray()
     N = len(A)
@@ -181,8 +183,6 @@ def random_walk_iteration(graph: nx.Graph,
 
     p = PI @ PI[:, j]
 
-    # todo: debug when this case occurs
-    # my bet is that this happens when some node does not have any edges or something similar.
     if np.isnan(p).any():
         print(p.sum())
         print(p)
