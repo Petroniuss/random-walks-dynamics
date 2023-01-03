@@ -1,6 +1,11 @@
-from animation import dry_run_snap_graph, dry_run_animation
-from statistics import show_time_to_convergence
-from graphs import graph_bitcoin, graph_karate_club, graph_bridge
+import matplotlib.pyplot as plt
+
+import pi
+from animation import (animate_random_walk, dry_run_animation,
+                       dry_run_snap_graph)
+from graphs import graph_bitcoin, graph_bridge, graph_karate_club
+from metrics import ConvergenceTime
+from simulation import Simulation
 
 # 1. Extract graph definition from core algorithm.
 # 2. Create animation:
@@ -11,14 +16,20 @@ from graphs import graph_bitcoin, graph_karate_club, graph_bridge
 
 
 if __name__ == '__main__':
-    # show_time_to_convergence(graph_karate_club(), graph_name='karate')
-    # show_time_to_convergence(graph_bitcoin(500), graph_name='bitcoin')
-    # show_time_to_convergence(graph_bitcoin(500), graph_name='bitcoin', alpha=7.0)
-    # show_time_to_convergence(graph_bitcoin(500), graph_name='bitcoin', alpha=0.1)
-    # show_time_to_convergence(graph_bridge(250), graph_name='bridge', alpha=0.1)
+    karate = graph_karate_club()
 
+    karate_sim = Simulation(
+        karate,
+        pi.uniform(karate),
+        max_iters=100,
+        graph_name='karate',
+        metrics={'ConvergenceTime': ConvergenceTime},
+    )
 
+    animation_name = f'karate.mp4'
+    animate_random_walk(karate_sim, animation_name=animation_name, fps=20, node_size=50, edge_alpha=0.2)
+    print(f'Generated {animation_name}')
 
-    # graph = graph_bridge(250)
-    # show_time_to_convergence(graph_bitcoin(n=100))
-    dry_run_snap_graph()
+    plt.close()
+
+    ConvergenceTime.show(karate_sim.metrics['ConvergenceTime'])
