@@ -73,7 +73,6 @@ class Simulation:
         if i in self.graph[self.j]:
             self.graph[self.j][i][HEAT_ATTRIBUTE] += 1
         else:
-            # todo: is this a bug? I guess no..
             if self.verbose:
                 print(f'There is no edge: {self.j} -> {i}')
 

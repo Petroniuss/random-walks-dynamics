@@ -3,23 +3,13 @@ import networkx as nx
 HEAT_ATTRIBUTE = 'heat'
 
 
-def decorate_graph_with_attributes(graph: nx.Graph):
-    nx.set_edge_attributes(graph, 1, HEAT_ATTRIBUTE)
-    nx.set_node_attributes(graph, 1, HEAT_ATTRIBUTE)
-
-    return graph
-
-
-def graph_karate_club():
-    return decorate_graph_with_attributes(nx.karate_club_graph())
-
-
-def select_max_connected_component(graph: nx.Graph):
-    connected_nodes = max(nx.connected_components(graph), key=len)
-    graph = nx.subgraph(graph, connected_nodes).copy()
+# todo add this graph to the report.
+# create animation with this graph.
+def graph_grid(n: int = 100):
+    graph = nx.grid_2d_graph(n, n)
     graph = nx.convert_node_labels_to_integers(graph)
 
-    return graph
+    return decorate_graph_with_attributes(graph)
 
 
 def graph_bitcoin(n: int = 100):
@@ -56,3 +46,22 @@ def graph_bridge(n: int = 250):
 
     print(f'Selected subgraph: {nx.info(graph)}')
     return decorate_graph_with_attributes(graph)
+
+
+def decorate_graph_with_attributes(graph: nx.Graph):
+    nx.set_edge_attributes(graph, 1, HEAT_ATTRIBUTE)
+    nx.set_node_attributes(graph, 1, HEAT_ATTRIBUTE)
+
+    return graph
+
+
+def graph_karate_club():
+    return decorate_graph_with_attributes(nx.karate_club_graph())
+
+
+def select_max_connected_component(graph: nx.Graph):
+    connected_nodes = max(nx.connected_components(graph), key=len)
+    graph = nx.subgraph(graph, connected_nodes).copy()
+    graph = nx.convert_node_labels_to_integers(graph)
+
+    return graph

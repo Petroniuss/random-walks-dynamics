@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from collections import defaultdict
 
 import matplotlib.pyplot as plt
+import networkx as nx
 import numpy as np
 
 from simulation import Simulation
@@ -25,6 +26,38 @@ class Metric(ABC):
         pass
 
 
+class DistanceFromStartNode(Metric):
+
+    def __init__(self, sim: Simulation):
+        super().__init__(sim)
+        self.shortest_paths_to_start = None
+        self.xs = []
+        self.ys = []
+
+    def inc(self):
+        if self.shortest_paths_to_start is None:
+            start_node = self.sim.j
+            self.shortest_paths_to_start = nx.single_source_shortest_path_length(self.sim.graph, start_node)
+            self.xs.append(self.sim.current_iter)
+            self.ys.append(0)
+
+            return
+
+        self.xs.append(self.sim.current_iter)
+        self.ys.append(self.shortest_paths_to_start[self.sim.j])
+
+    @staticmethod
+    def show(self):
+        plt.plot(self.xs, self.ys,
+                 label='distance', linewidth=5)
+        plt.xlabel('iterations')
+        plt.ylabel('distance from start node')
+        plt.title(
+            f'{self.sim.graph_name} graph: time to convergence, alpha={self.sim.alpha}, nodes={self.sim.N}')
+        plt.legend()
+        plt.show()
+
+
 class ConvergenceTime(Metric):
     def __init__(self, sim):
         self.sim = sim
@@ -45,8 +78,8 @@ class ConvergenceTime(Metric):
         self.xs.append(self.sim.current_iter)
         self.ys.append(self.visited_counter)
 
+    @staticmethod
     def show(convergence_time: 'ConvergenceTime'):
-        # plt.figure(figsize=(10, 10))
         plt.plot(convergence_time.xs, convergence_time.ys,
                  label='visited nodes', linewidth=5)
         plt.plot(convergence_time.xs, [convergence_time.sim.N] * len(convergence_time.xs), label='total nodes',

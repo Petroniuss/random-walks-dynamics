@@ -1,4 +1,6 @@
-numpy~=1.23.5
+numpy~=1.24.1
 matplotlib~=3.6.2
 networkx~=2.8.8
 tqdm~=4.64.1
+jupyter~=1.0.0
+scipy~=1.10.0
